@@ -1,0 +1,12 @@
+all:
+  vars:
+    ansible_user: vagrant
+  children:
+    vagrant:
+      hosts:
+        ansible-rhel:
+          ansible_host: 192.168.121.153
+        ansible-centos:
+          ansible_host: 192.168.121.91
+        ansible-fedora:
+          ansible_host: 192.168.121.64
