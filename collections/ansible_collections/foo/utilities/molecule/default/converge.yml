@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include hello_world"
+      include_role:
+        name: "hello_world"
+
+    - name: "Include foo"
+      include_role:
+        name: "foo"

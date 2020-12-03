@@ -1,0 +1,8 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  collections:
+    - foo.utilities
+  tasks:
+    - import_role:
+        name: hello_world
