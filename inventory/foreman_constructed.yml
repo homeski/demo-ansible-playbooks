@@ -1,0 +1,4 @@
+plugin: constructed
+strict: False
+groups:
+  satellite_content_hosts: true
