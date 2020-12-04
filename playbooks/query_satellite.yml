@@ -1,8 +1,9 @@
-- hosts: localhost
-  connection: local
+- hosts: satellite_content_hosts
   gather_facts: no
   tasks:
     # Grab the `foreman_certname` value from each host in `all` group
     # https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#selecting-values-from-arrays-or-hashtables
     - debug:
         var: groups['all'] | map('extract', hostvars, 'foreman_certname') | list
+      delegate_to: localhost
+      run_once: true
