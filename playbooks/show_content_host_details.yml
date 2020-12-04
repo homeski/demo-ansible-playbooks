@@ -1,4 +1,4 @@
-- hosts: satellite_content_hosts
+- hosts: localhost
   gather_facts: no
   tasks:
     # Grab the `foreman_certname` value from each host in `all` group
