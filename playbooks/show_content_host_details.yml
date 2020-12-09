@@ -4,3 +4,6 @@
     - debug:
         var: hostvars[inventory_hostname]
       delegate_to: localhost
+
+    - debug:
+        msg: hello world
