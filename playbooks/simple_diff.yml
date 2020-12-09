@@ -1,25 +1,32 @@
 - name: Discover if two json inputs are different, and take action accordingly
   hosts: localhost
   vars:
+    - localhost_facts: "{{ ansible_facts }}"
     - json_homie: "{{ 'homie' | to_json }}"
     - json_tate: "{{ 'tate' | to_json }}"
     - json_homieII: "{{ 'homie' | to_json }}"
 
   tasks:
-    - name: Run when two simple inputs are the same 
+    - name: Simple facts print statement 
+      debug:
+        msg: "{{ localhost_facts }}"
+            
+    - name: If localhost facts include tate, take action 
       debug:
         msg: "Two inputs match --> Take action"
-      when: json_a == json_b
+      when: json_tate in localhost_facts
 
-    - name: Run when two simple inputs are different 
+    - name: If 'homie' == 'tate' in json, take action 
+      debug:
+        msg: "Two inputs match --> Take action"
+      when: json_homie == json_tate
+
+    - name: If 'homie' != 'tate' in json, take action 
       debug:
         msg: "Two inputs DO NOT match --> take action"
-      when: json_a != json_b
+      when: json_homie != json_tate
 
-    - name: Run when two simple inputs are the same (using matching inputs)
+    - name: If 'homie' == 'homie' in json, take action 
       debug:
         msg: "Two inputs match --> take action"
-      when: json_a == json_c
-
-  handlers:
-    # Handlers section if need be 
+      when: json_homie == json_homieII 
