@@ -1,0 +1,25 @@
+- name: Discover if two json inputs are different, and take action accordingly
+  hosts: localhost
+  vars:
+    - json_homie: "{{ 'homie' | to_json }}"
+    - json_tate: "{{ 'tate' | to_json }}"
+    - json_homieII: "{{ 'homie' | to_json }}"
+
+  tasks:
+    - name: Run when two simple inputs are the same 
+      debug:
+        msg: "Two inputs match --> Take action"
+      when: json_a == json_b
+
+    - name: Run when two simple inputs are different 
+      debug:
+        msg: "Two inputs DO NOT match --> take action"
+      when: json_a != json_b
+
+    - name: Run when two simple inputs are the same (using matching inputs)
+      debug:
+        msg: "Two inputs match --> take action"
+      when: json_a == json_c
+
+  handlers:
+    # Handlers section if need be 
