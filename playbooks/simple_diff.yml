@@ -1,35 +1,36 @@
-# Tate DeVito
-# 
-# References: 
-# https://stackoverflow.com/questions/59949438/compare-ansible-registered-variables-for-multiple-hosts
-
 - name: Discover if two host records are different based, and take action accordingly
-  hosts: 
-    - localhost
-    - ansible_rhel
+  hosts: localhost
   gather_facts: no
+  vars:
+    # TODO: Instead of using dummy host data here, load in hosts from all group
+    hostnames:
+      - host: host_1
+        ip: 128.0.1
+      - host: host_2
+        ip: 128.0.1
+      - host: host_3
+        ip: 128.0.2
 
   tasks:
-    - name: Record localhost hostname as a variable 
-      debug:
-        var: hostvars[inventory_hostname]
-      register: hostvars_localhost
-      delegate_to: localhost
+    # References: 
+    # https://stackoverflow.com/questions/59949438/compare-ansible-registered-variables-for-multiple-hosts
+    - name: Build a list of hostnames
+      set_fact: 
+        hosts_data: "{{ hostnames | json_query('[].host') }}"
 
-    - name: Record ansible_rhel hostname as a variable 
-      debug:
-        var: hostvars[inventory_hostname]
-      register: hostvars_ansible_rhel
-      delegate_to: ansible_rhel
+    - name: Find unique elements in that list of hostnames
+      debug: 
+        msg: "Hostnames are not the same"
+      when: hostnames | json_query('[].ip') | list | unique | length > 1       
 
-    - name: Simple printing of recorded variables 
-      debug:
-        msg: "{{ item }}"
-      loop:
-        - "{{ hostvars_localhost }}"
-        - "{{ hostvars_ansible_rhel }}"
-            
-    - name: If localhost = ansible_rhel, take action 
-      debug:
-        msg: "Two hosts match --> Take action"
-      when: "{{ hostvars_localhost == hostvars_ansible_rhel }}" 
+    # - name: Record satellite hostname as a variable 
+    #   debug:
+    #     var: hostvars[inventory_hostname]
+    #   register: hostvars_satellite
+    #   delegate_to: satellite.escwq.xyz
+
+    # - name: Record ansible_rhel hostname as a variable 
+    #   debug:
+    #     var: hostvars[inventory_hostname]
+    #   register: hostvars_ansible_rhel
+    #   delegate_to: ansible-rhel.escwq.xyz
