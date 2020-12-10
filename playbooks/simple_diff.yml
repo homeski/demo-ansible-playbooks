@@ -1,32 +1,28 @@
+# Tate DeVito
+# 
+# References: 
+# https://stackoverflow.com/questions/59949438/compare-ansible-registered-variables-for-multiple-hosts
+
 - name: Discover if two json inputs are different, and take action accordingly
-  hosts: localhost
-  vars:
-    - localhost_facts: "{{ ansible_facts }}"
-    - json_homie: "{{ 'homie' | to_json }}"
-    - json_tate: "{{ 'tate' | to_json }}"
-    - json_homieII: "{{ 'homie' | to_json }}"
+  hosts: 
+    - localhost
+  gather_facts: no
 
   tasks:
-    - name: Simple facts print statement 
+    - name: Record facts in localhost as a variable 
       debug:
-        msg: "{{ localhost_facts }}"
+        var: hostvars[inventory_hostname]
+      register: hostvars_localhost
+      delegate_to: localhost
+
+    - name: Simple printing of the hostvars_localhost registered variable 
+      debug:
+        msg: "{{ hostvars_localhost }}"
             
-    - name: If localhost facts include tate, take action 
+    - name: If x = xII, take action 
+      vars: 
+        - x: x
+        - xII: x
       debug:
         msg: "Two inputs match --> Take action"
-      when: json_tate in localhost_facts
-
-    - name: If 'homie' == 'tate' in json, take action 
-      debug:
-        msg: "Two inputs match --> Take action"
-      when: json_homie == json_tate
-
-    - name: If 'homie' != 'tate' in json, take action 
-      debug:
-        msg: "Two inputs DO NOT match --> take action"
-      when: json_homie != json_tate
-
-    - name: If 'homie' == 'homie' in json, take action 
-      debug:
-        msg: "Two inputs match --> take action"
-      when: json_homie == json_homieII 
+      when: x == xII 
